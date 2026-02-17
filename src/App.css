@@ -1,0 +1,4 @@
+/* App-level styles - layout is handled by Tailwind */
+#root {
+  width: 100%;
+}
