@@ -43,11 +43,18 @@ export function useGame(names: string[]) {
     });
   }, []);
 
+  const giveUp = useCallback(() => {
+    setState(prev => {
+      if (!prev || prev.status !== 'playing') return prev;
+      return { ...prev, status: 'lost' };
+    });
+  }, []);
+
   const startNewGame = useCallback(() => {
     if (names.length > 0) {
       setState(buildInitialState(names));
     }
   }, [names]);
 
-  return { state, submitGuess, startNewGame };
+  return { state, submitGuess, giveUp, startNewGame };
 }

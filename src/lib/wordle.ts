@@ -33,6 +33,20 @@ export function evaluateGuess(guess: string, answer: string): GuessChar[] {
   return result;
 }
 
+/**
+ * これまでの推測結果と矛盾しない候補名の数を返す
+ */
+export function countRemainingCandidates(names: string[], guesses: GuessChar[][]): number {
+  if (guesses.length === 0) return names.length;
+  return names.filter(name =>
+    guesses.every(guessChars => {
+      const guessText = guessChars.map(c => c.char).join('');
+      const simulated = evaluateGuess(guessText, name);
+      return simulated.every((g, i) => g.status === guessChars[i].status);
+    })
+  ).length;
+}
+
 export function getRandomAnswer(names: string[]): string {
   return names[Math.floor(Math.random() * names.length)];
 }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { UmaMusume } from './types';
 import { useGame } from './hooks/useGame';
-import { buildCharStatusMap } from './lib/wordle';
+import { buildCharStatusMap, countRemainingCandidates } from './lib/wordle';
 import { Header } from './components/Header';
 import { GuessGrid } from './components/GuessGrid';
 import { KanaPanel } from './components/KanaPanel';
@@ -21,7 +21,8 @@ export default function App() {
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const names = useMemo(() => umaList.map(u => u.name), [umaList]);
-  const { state, submitGuess, startNewGame } = useGame(names);
+  const { state, submitGuess, giveUp, startNewGame } = useGame(names);
+  const [countRevealed, setCountRevealed] = useState(false);
 
   // JSONデータ読み込み
   useEffect(() => {
@@ -80,6 +81,7 @@ export default function App() {
     startNewGame();
     setModalOpen(false);
     setCurrentGuess('');
+    setCountRevealed(false);
     setTimeout(() => inputRef.current?.focus(), 50);
   }, [startNewGame]);
 
@@ -93,12 +95,40 @@ export default function App() {
 
   const isPlaying = state.status === 'playing';
   const charStatusMap = buildCharStatusMap(state.guesses.map(g => g.chars));
+  const remainingCount = countRemainingCandidates(names, state.guesses.map(g => g.chars));
 
   return (
     <div className="min-h-screen flex flex-col items-center pb-8">
       <Header onNewGame={handleNewGame} onRules={() => setRulesOpen(true)} />
 
       <main className="flex flex-col gap-4 px-3 w-full max-w-md">
+        {/* 残り候補数 + 諦めるボタン */}
+        {state.guesses.length > 0 && (
+          <div className="flex items-center justify-between px-1">
+            <button
+              onClick={() => setCountRevealed(v => !v)}
+              className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
+            >
+              残り候補:{' '}
+              <span
+                className="font-bold text-white transition-all"
+                style={countRevealed ? {} : { filter: 'blur(6px)', userSelect: 'none' }}
+              >
+                {remainingCount}
+              </span>{' '}
+              人
+            </button>
+            {isPlaying && (
+              <button
+                onClick={giveUp}
+                className="text-xs px-3 py-1 rounded bg-zinc-700 text-zinc-400 hover:bg-red-900 hover:text-red-200 transition-colors"
+              >
+                諦める
+              </button>
+            )}
+          </div>
+        )}
+
         {/* 推測履歴 */}
         <GuessGrid state={state} />
 
