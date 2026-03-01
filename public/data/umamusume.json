@@ -148,6 +148,14 @@
     { "id": "sonon_elfie", "name": "ソノンエルフィー" },
     { "id": "tucker_brine", "name": "タッカーブライン" },
     { "id": "ligant_ona", "name": "リガントーナ" },
-    { "id": "little_cocon", "name": "リトルココン" }
+    { "id": "little_cocon", "name": "リトルココン" },
+    { "id": "forever_young", "name": "フォーエバーヤング" },
+    { "id": "epiphaneia", "name": "エピファネイア" },
+    { "id": "rulership", "name": "ルーラーシップ" },
+    { "id": "rose_kingdom", "name": "ローズキングダム" },
+    { "id": "logotype", "name": "ロゴタイプ" },
+    { "id": "marche_lorraine", "name": "マルシュロレーヌ" },
+    { "id": "victoire_pisa", "name": "ヴィクトワールピサ" },
+    { "id": "casino_drive", "name": "カジノドライヴ" }
   ]
 }
